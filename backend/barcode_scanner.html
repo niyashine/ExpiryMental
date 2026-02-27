@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fridge Barcode Scanner</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 20px;
+        }
+        #scanner {
+            width: 640px;
+            height: 480px;
+            margin: auto;
+            border: 2px solid #333;
+        }
+        #status {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        button, input[type="file"] {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Scan Your Food Barcode</h2>
+    <div id="scanner"></div>
+    <div id="status">Initializing camera...</div>
+
+    <!-- Upload barcode image -->
+    <input type="file" id="barcodeImage" accept="image/*" />
+    <button id="scanImage">Scan Image</button>
+
+    <button id="restart">Restart Camera Scanner</button>
+
+    <script>
+        const statusDiv = document.getElementById("status");
+        const scannerDiv = document.getElementById("scanner");
+        const restartBtn = document.getElementById("restart");
+        const barcodeInput = document.getElementById("barcodeImage");
+        const scanImageBtn = document.getElementById("scanImage");
+
+        // Function to send barcode to backend
+        async function sendBarcodeToServer(code) {
+            statusDiv.textContent = "Scanned: " + code;
+            try {
+                const res = await fetch("http://localhost:5000/foods/scan", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ barcode: code })
+                });
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`Server returned status ${res.status}: ${text}`);
+                }
+                const data = await res.json();
+                alert("Product Added: " + (data.name || "Unknown") + "\nQuantity: " + (data.quantity || 1));
+                console.log("Backend response:", data);
+            } catch (err) {
+                console.error("Error sending barcode:", err);
+                statusDiv.textContent = "Failed to send barcode: " + err.message;
+                alert("Failed to send barcode to server: " + err.message);
+            }
+        }
+
+        // Initialize live camera scanner
+        function startScanner() {
+            statusDiv.textContent = "Initializing camera...";
+
+            Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: scannerDiv,
+                    constraints: {
+                        width: 640,
+                        height: 480,
+                        facingMode: "environment"
+                    }
+                },
+                decoder: {
+                    readers: ["ean_reader", "upc_reader", "upc_e_reader"]
+                },
+                locate: true
+            }, function(err) {
+                if (err) {
+                    console.error("Quagga init error:", err);
+                    statusDiv.textContent = "Camera init failed: " + err;
+                    return;
+                }
+                statusDiv.textContent = "Camera ready. Scan a barcode.";
+                Quagga.start();
+            });
+
+            Quagga.onDetected(function(result) {
+                const code = result.codeResult.code;
+                console.log("Detected barcode from camera:", code);
+                Quagga.stop();
+                sendBarcodeToServer(code);
+            });
+        }
+
+        // Scan barcode from uploaded image
+        scanImageBtn.addEventListener("click", () => {
+            if (!barcodeInput.files.length) {
+                alert("Please select an image first!");
+                return;
+            }
+
+            const file = barcodeInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                Quagga.decodeSingle({
+                    src: e.target.result,
+                    numOfWorkers: 0,
+                    decoder: { readers: ["ean_reader", "upc_reader", "upc_e_reader"] },
+                    locate: true
+                }, function(result) {
+                    console.log("Quagga result object:", result);
+                    if (result && result.codeResult) {
+                        console.log("Detected barcode from image:", result.codeResult.code);
+                        sendBarcodeToServer(result.codeResult.code);
+                    } else {
+                        alert("No barcode detected in the image.");
+                    }
+                });
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        // Start live scanner on page load
+        startScanner();
+
+        // Restart button
+        restartBtn.addEventListener("click", function() {
+            Quagga.stop();
+            startScanner();
+        });
+    </script>
+</body>
+</html>
