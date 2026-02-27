@@ -1,0 +1,98 @@
+/* Shelf styles */
+.shelf-page {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  background: linear-gradient(180deg, #f0f6ff 0%, #ffffff 100%);
+}
+
+.shelf-container {
+  width: 100%;
+  max-width: 900px;
+}
+
+.shelf-title {
+  font-size: 28px;
+  color: #1a365d;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.shelf-empty {
+  text-align: center;
+  color: #718096;
+  font-size: 16px;
+  padding: 40px 20px;
+}
+
+.foods-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.food-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.food-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.food-emoji {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.food-name {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.food-expiry {
+  margin: 0;
+  font-size: 13px;
+  color: #718096;
+}
+
+@media (max-width: 768px) {
+  .foods-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+  
+  .shelf-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .shelf-page {
+    padding: 20px 12px;
+  }
+  
+  .foods-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  
+  .food-card {
+    padding: 16px 12px;
+  }
+  
+  .food-emoji {
+    font-size: 32px;
+  }
+}
+
