@@ -19,6 +19,7 @@ def add_food():
     quantity = data["quantity"]
     expiry_date = data["expiry_date"]
     barcode = data.get("barcode", None)
+    
 
     cursor = db.cursor()
     query = """

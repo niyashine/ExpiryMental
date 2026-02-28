@@ -9,9 +9,11 @@ function Dashboard() {
       <div className="dashboard-container">
         {/* Header Section */}
         <div className="dashboard-header">
-          <div className="header-badge">🧊 Fridge Expiry Tracker</div>
+          <div className="header-badge">ExpiryMental</div>
           <h1 className="dashboard-title">Welcome to Your Fridge</h1>
-          <p className="dashboard-subtitle">Manage your groceries, reduce waste, stay organized</p>
+          <p className="dashboard-subtitle">
+            Manage your groceries, reduce waste, stay organized
+          </p>
         </div>
 
         {/* Action Cards */}
@@ -24,7 +26,9 @@ function Dashboard() {
               <div className="card-icon">➕</div>
             </div>
             <h2 className="card-title">Add Food Item</h2>
-            <p className="card-description">Add a new item to your fridge and track expiry</p>
+            <p className="card-description">
+              Add a new item to your fridge and track expiry
+            </p>
             <div className="card-arrow">→</div>
           </button>
 
@@ -36,7 +40,9 @@ function Dashboard() {
               <div className="card-icon">🧊</div>
             </div>
             <h2 className="card-title">View Shelf</h2>
-            <p className="card-description">Check all your items and their expiry status</p>
+            <p className="card-description">
+              Check all your items and their expiry status
+            </p>
             <div className="card-arrow">→</div>
           </button>
         </div>

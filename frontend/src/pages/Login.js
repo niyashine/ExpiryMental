@@ -5,11 +5,13 @@ import "./login.css";
 function Login() {
   const navigate = useNavigate();
 
+  // Form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  // Submit handler with correct TS typing
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -17,7 +19,8 @@ function Login() {
       return;
     }
 
-    if (email === "admin@gmail.com" && password === "1234") {
+    // Demo login credentials
+    if (email === "a@gmail.com" && password === "1") {
       navigate("/dashboard");
     } else {
       setError("Invalid credentials");
@@ -28,8 +31,10 @@ function Login() {
     <div className="login-wrapper">
       <div className="login-card">
         <div className="login-header">
-          <h1 className="login-title">🧊 Fridge Expiry Tracker</h1>
-          <p className="login-subtitle">Keep your food fresh, track expiry dates</p>
+          <h1 className="login-title">ExpiryMental</h1>
+          <p className="login-subtitle">
+            Keep your food fresh, track expiry dates
+          </p>
         </div>
 
         <form onSubmit={handleLogin} className="login-form">
@@ -57,10 +62,10 @@ function Login() {
 
           {error && <p className="error-message">{error}</p>}
 
-          <button type="submit" className="login-button">Sign In</button>
+          <button type="submit" className="login-button">
+            Sign In
+          </button>
         </form>
-
-        <p className="login-hint">Demo: admin@gmail.com / 1234</p>
       </div>
     </div>
   );

@@ -18,9 +18,9 @@ db = mysql.connector.connect(
     database="fridge_db"    # your MySQL database
 )
 
-# --------------------
+# --------------------ac
 # Register blueprint
-# --------------------
+# --------------------a
 from routes.food import food_bp
 app.register_blueprint(food_bp)
 
